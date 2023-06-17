@@ -6,8 +6,11 @@ import {
 } from "react-router-dom"
 
 import PageWrapper from "./pages/PageWrapper"
-import Login from "./pages/Login"
-import Home from "./pages/Home"
+import Login from "./pages/Login/Login"
+import Home from "./pages/Home/Home"
+
+// Main css
+import "./index.css"
 
 function App() {
 	const router = createBrowserRouter(

@@ -36,7 +36,7 @@ const PageWrapper = () => {
 	}, [])
 
 	return (
-		<div style={{ width: "100%", height: "100%" }}>
+		<div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
 			<div style={{ position: "sticky", top: 0, left: 0, width: "100%" }}>
 				This is Header
 				{isLoginPage ? <span>Login</span> : null}

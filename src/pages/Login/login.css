@@ -1,0 +1,29 @@
+.field-row {
+	width: 100%;
+	margin-top: 1.5rem;
+}
+
+.field-row-1 {
+	display: flex;
+	gap: 1rem;
+}
+
+@media (max-width: 767px) {
+	.container-card {
+		background: none !important;
+	}
+
+	.legend-card {
+		display: none;
+	}
+
+	.detail-card {
+		flex-basis: 100% !important;
+		border-radius: 20px !important;
+	}
+
+	.field-row-1 {
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+}

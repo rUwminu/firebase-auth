@@ -8,7 +8,17 @@
 	gap: 1rem;
 }
 
-@media (max-width: 767px) {
+.login-slide-left {
+	opacity: 0;
+	transform: translate(-100%, 0);
+}
+
+.register-slide-center {
+	opacity: 1;
+	transform: translate(-100%, 0);
+}
+
+@media (max-width: 1127px) {
 	.container-card {
 		background: none !important;
 	}
@@ -17,13 +27,25 @@
 		display: none;
 	}
 
-	.detail-card {
+	.wrapper-card {
+		max-width: 38rem;
 		flex-basis: 100% !important;
 		border-radius: 20px !important;
 	}
 
-	.field-row-1 {
+	.detail-card {
+		padding: 2.5rem !important;
+	}
+
+	/* .field-row-1 {
 		flex-direction: column;
 		gap: 1.5rem;
+	} */
+}
+
+@media (max-width: 600px) {
+	.field-row-1 {
+		gap: 1.5rem;
+		flex-direction: column !important;
 	}
 }

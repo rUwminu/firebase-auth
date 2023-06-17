@@ -6,6 +6,8 @@ import "./login.css"
 import AiLegendPng from "../../assets/images/login_legend.png"
 import ViewPng from "../../assets/images/view_pass.png"
 import ClosePng from "../../assets/images/close_view_pass.png"
+import GoogleLogo from "../../assets/images/google_logo.png"
+import FacebookLogo from "../../assets/images/facebook_logo.png"
 
 const defaultStyle = {
 	pageWrapper: {
@@ -19,11 +21,11 @@ const defaultStyle = {
 	cardContainer: {
 		display: "flex",
 		alignItems: "center",
-		justifyContent: "end",
+		justifyContent: "center",
 		width: "80%",
 		height: "80%",
 		maxWidth: "70rem",
-		maxHeight: "50rem",
+		maxHeight: "45rem",
 		background: `linear-gradient(
 			130deg,
 			purple 0%,
@@ -32,6 +34,8 @@ const defaultStyle = {
 		)`,
 	},
 	cardWrapper: {
+		display: "flex",
+		alignItems: "start",
 		flexBasis: "57%",
 		width: "100%",
 		height: "100%",
@@ -39,19 +43,53 @@ const defaultStyle = {
 		borderTopLeftRadius: "20px",
 		borderBottomLeftRadius: "20px",
 		boxShadow: "0px 0px 12px -1px rgba(0,0,0,0.2)",
+		overflow: "hidden",
 	},
+}
+
+const FORM_TYPE = {
+	LOGIN: "LOGIN",
+	REGISTER: "REGISTER",
 }
 
 const Login = () => {
 	const [isRegister, setIsRegister] = useState(false)
+
+	const getSubmitFormOffsetClassname = (type = "") => {
+		let offsetClassname = ""
+
+		switch (type) {
+			case FORM_TYPE.LOGIN:
+				offsetClassname = isRegister ? "login-slide-left" : ""
+				break
+			case FORM_TYPE.REGISTER:
+				offsetClassname = isRegister ? "register-slide-center" : ""
+				break
+			default:
+				break
+		}
+
+		return offsetClassname
+	}
 
 	return (
 		<div style={defaultStyle.pageWrapper}>
 			<div style={defaultStyle.cardContainer} className="container-card">
 				<LegendCard />
 
-				<div style={defaultStyle.cardWrapper} className="detail-card">
-					<RegisterCard />
+				<div style={defaultStyle.cardWrapper} className="wrapper-card">
+					<LoginCard
+						offsetClassname={getSubmitFormOffsetClassname(
+							FORM_TYPE.LOGIN
+						)}
+						setIsRegister={setIsRegister}
+					/>
+					<RegisterCard
+						offsetClassname={getSubmitFormOffsetClassname(
+							FORM_TYPE.REGISTER
+						)}
+						setIsRegister={setIsRegister}
+					/>
 				</div>
 			</div>
 		</div>
@@ -90,37 +128,214 @@ const LegendCard = () => {
 
 			<div style={style.legendImgContainer}>
 				<div style={style.legengImgWrapper}>
-					<img src={AiLegendPng} style={{ width: "130%" }} />
+					<img
+						src={AiLegendPng}
+						style={{ width: "130%", minWidth: "18rem" }}
+					/>
 				</div>
 			</div>
 		</div>
 	)
 }
 
-const LoginCard = () => {
-	const [dataDetail, setDataDetail] = useState({
-		username: "",
-		password: "",
-		fullname: "",
-	})
-
-	return <div></div>
-}
-
-const RegisterCard = () => {
+const LoginCard = ({ offsetClassname = "", setIsRegister = () => null }) => {
 	const style = {
 		cardDetail: {
+			flexBasis: "100%",
 			display: "flex",
 			flexDirection: "column",
 			width: "100%",
 			height: "100%",
-			padding: "4.5rem 2rem",
+			minWidth: "100%",
+			padding: "4.5rem 2rem 4.5rem 5rem",
+			transition: "all 0.3s ease-in-out",
 		},
 		fieldContainer: {
 			display: "flex",
 			flexDirection: "column",
 			width: "100%",
-			paddingTop: "2.5rem",
+			paddingTop: "2rem",
+		},
+		seperatorWrapper: {
+			display: "flex",
+			alignItems: "center",
+			width: "100%",
+			padding: "1.25rem 0",
+		},
+		seperatorLine: {
+			width: "100%",
+			height: "1.5px",
+			backgroundColor: "black",
+		},
+	}
+
+	const [dataDetail, setDataDetail] = useState({
+		username: "",
+		password: "",
+	})
+	const [errArr, setErrArr] = useState([])
+
+	const handleSubmitLogin = () => {
+		let isValid = validateDetail()
+
+		if (!isValid) return
+	}
+
+	const getIsInputFieldError = (key = "") => {
+		if (!key) return false
+
+		let find = errArr.find((x) => x === key)
+
+		if (find) return true
+
+		if (!find) return false
+	}
+
+	const validateDetail = () => {
+		let isValid = true
+		let newErrorArr = []
+
+		if (dataDetail.username.trim() === "") {
+			isValid = false
+			newErrorArr.push("username")
+		}
+
+		if (dataDetail.password.trim() === "") {
+			isValid = false
+			newErrorArr.push("password")
+		}
+
+		setErrArr(newErrorArr)
+
+		return isValid
+	}
+
+	return (
+		<div
+			style={style.cardDetail}
+			className={`detail-card ${offsetClassname}`}
+		>
+			<h1>Login Account</h1>
+
+			<div style={style.fieldContainer}>
+				<div className="field-row field-row-2">
+					<InputField
+						inputType="text"
+						placeholder="Username"
+						value={dataDetail.username}
+						isErrorField={getIsInputFieldError("username")}
+						handleOnChange={(value) => {
+							setDataDetail((prev) => {
+								return {
+									...prev,
+									username: value,
+								}
+							})
+						}}
+						wrapperStyle={{}}
+					/>
+				</div>
+
+				<div className="field-row field-row-3">
+					<InputField
+						inputType="password"
+						placeholder="Password"
+						value={dataDetail.password}
+						isErrorField={getIsInputFieldError("password")}
+						handleOnChange={(value) => {
+							setDataDetail((prev) => {
+								return {
+									...prev,
+									password: value,
+								}
+							})
+						}}
+						wrapperStyle={{}}
+					/>
+				</div>
+
+				<div
+					style={{ flexDirection: "column" }}
+					className="field-row field-row-4"
+				>
+					<SubmitButton
+						label={"Login Account"}
+						handleOnClick={handleSubmitLogin}
+					/>
+
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							fontSize: "16px",
+							fontWeight: "bold",
+							padding: "0.45rem 0",
+						}}
+					>
+						<span>Don't have an account?</span>
+						<span
+							style={{
+								color: "purple",
+								marginLeft: "0.25rem",
+								cursor: "pointer",
+							}}
+							onClick={() => setIsRegister(true)}
+						>
+							Create
+						</span>
+					</div>
+				</div>
+
+				<div style={style.seperatorWrapper}>
+					<div style={style.seperatorLine} />
+					<span style={{ padding: "0 1rem" }}>Or</span>
+					<div style={style.seperatorLine} />
+				</div>
+
+				<div className="field-row field-row-1">
+					<MediaButton
+						logo={GoogleLogo}
+						label={"Sign in with Google"}
+					/>
+
+					<MediaButton
+						logo={FacebookLogo}
+						label={"Sign in with Facebook"}
+					/>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const RegisterCard = ({ offsetClassname = "", setIsRegister = () => null }) => {
+	const style = {
+		cardDetail: {
+			flexBasis: "100%",
+			display: "flex",
+			flexDirection: "column",
+			width: "100%",
+			height: "100%",
+			minWidth: "100%",
+			padding: "4.5rem 2rem 4.5rem 5rem",
+			transition: "all 0.3s ease-in-out",
+		},
+		fieldContainer: {
+			display: "flex",
+			flexDirection: "column",
+			width: "100%",
+			paddingTop: "2rem",
+		},
+		seperatorWrapper: {
+			display: "flex",
+			alignItems: "center",
+			width: "100%",
+			padding: "1.25rem 0",
+		},
+		seperatorLine: {
+			width: "100%",
+			height: "1.5px",
+			backgroundColor: "black",
 		},
 	}
 
@@ -155,7 +370,10 @@ const RegisterCard = () => {
 	}
 
 	return (
-		<div style={style.cardDetail} className="detail-card">
+		<div
+			style={style.cardDetail}
+			className={`detail-card ${offsetClassname}`}
+		>
 			<h1>Create Account</h1>
 
 			<div style={style.fieldContainer}>
@@ -229,8 +447,54 @@ const RegisterCard = () => {
 					/>
 				</div>
 
-				<div className="field-row field-row-4">
-					<SubmitButton />
+				<div
+					style={{ flexDirection: "column" }}
+					className="field-row field-row-4"
+				>
+					<SubmitButton
+						label={"Create Account"}
+						handleOnClick={handleSubmitRegister}
+					/>
+
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							fontSize: "16px",
+							fontWeight: "bold",
+							padding: "0.45rem 0",
+						}}
+					>
+						<span>Already have an account?</span>
+						<span
+							style={{
+								color: "purple",
+								marginLeft: "0.25rem",
+								cursor: "pointer",
+							}}
+							onClick={() => setIsRegister(false)}
+						>
+							Login
+						</span>
+					</div>
+				</div>
+
+				<div style={style.seperatorWrapper}>
+					<div style={style.seperatorLine} />
+					<span style={{ padding: "0 1rem" }}>Or</span>
+					<div style={style.seperatorLine} />
+				</div>
+
+				<div className="field-row field-row-1">
+					<MediaButton
+						logo={GoogleLogo}
+						label={"Sign up with Google"}
+					/>
+
+					<MediaButton
+						logo={FacebookLogo}
+						label={"Sign up with Facebook"}
+					/>
 				</div>
 			</div>
 		</div>
@@ -250,11 +514,12 @@ const InputField = React.memo(
 			inputWrapper: {
 				position: "relative",
 				width: "100%",
+				height: "2.45rem",
 				padding:
 					inputType == "password"
-						? "0.65rem 2.5rem 0.65rem 13px"
-						: "0.65rem 13px",
-				outline: "1px solid black",
+						? "0rem 2.5rem 0rem 13px"
+						: "0rem 13px",
+				outline: isErrorField ? "1px solid red" : "1px solid black",
 				borderRadius: "5px",
 				...wrapperStyle,
 			},
@@ -362,7 +627,63 @@ const InputField = React.memo(
 
 const SubmitButton = React.memo(
 	({ label = "", handleOnClick = () => null }) => {
-		return
+		const style = {
+			btnWrapper: {
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+				width: "100%",
+				height: "2.45rem",
+				fontSize: "17px",
+				fontWeight: "bold",
+				color: "white",
+				background: `purple`,
+				borderRadius: "5px",
+				cursor: "pointer",
+			},
+		}
+
+		return (
+			<div style={style.btnWrapper} onClick={handleOnClick}>
+				{label}
+			</div>
+		)
+	}
+)
+
+const MediaButton = React.memo(
+	({ logo = "", label = "", handleOnClick = () => null }) => {
+		const style = {
+			btnWrapper: {
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+				gap: "0.5rem",
+				width: "100%",
+				height: "2.75rem",
+				border: "1px solid black",
+				borderRadius: "5px",
+				cursor: "pointer",
+			},
+			logoContainer: {
+				width: "1.5rem",
+				height: "1.5rem",
+			},
+		}
+
+		return (
+			<div style={style.btnWrapper}>
+				<div style={style.logoContainer}>
+					<img
+						src={logo}
+						style={{ width: "100%", height: "100%" }}
+						alt="media-logo"
+					/>
+				</div>
+
+				<span>{label}</span>
+			</div>
+		)
 	}
 )
 

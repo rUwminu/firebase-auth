@@ -317,6 +317,7 @@ const RegisterCard = ({ offsetClassname = "", setIsRegister = () => null }) => {
 			width: "100%",
 			height: "100%",
 			minWidth: "100%",
+			opacity: 0,
 			padding: "4.5rem 2rem 4.5rem 5rem",
 			transition: "all 0.3s ease-in-out",
 		},
